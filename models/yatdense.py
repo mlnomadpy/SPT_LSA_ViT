@@ -21,7 +21,7 @@ class YatDense(nn.Module):
         self,
         in_features: int,
         out_features: int,
-        use_bias: bool = True,
+        bias: bool = True,
         dtype: torch.dtype = torch.float32,
         epsilon: float = 1e-6,
         kernel_init: callable = None,
