@@ -119,7 +119,7 @@ class YatDense(nn.Module):
         y = y ** 2 / (distances + self.epsilon)
 
         # Add bias if used
-        if self.use_bias:
+        if self.bias:
             y += self.bias
             
         # Dynamic scaling
