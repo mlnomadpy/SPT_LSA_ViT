@@ -23,7 +23,7 @@ class YatDense(nn.Module):
         out_features: int,
         bias: bool = True,
         dtype: torch.dtype = torch.float32,
-        epsilon: float = 1e-6,
+        epsilon: float = 1e-4,
         kernel_init: callable = None,
         bias_init: callable = None,
         alpha_init: callable = None
