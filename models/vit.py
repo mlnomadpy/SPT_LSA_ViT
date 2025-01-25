@@ -4,6 +4,7 @@ from utils.drop_path import DropPath
 from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
 from .SPT import ShiftedPatchTokenization
+from .yatdense import YatDense
 # helpers
  
 def pair(t):
@@ -37,10 +38,9 @@ class FeedForward(nn.Module):
         self.num_patches = num_patches
         
         self.net = nn.Sequential(
-            nn.Linear(dim, hidden_dim),
-            nn.GELU(),
+            YatDense(dim, hidden_dim),
             nn.Dropout(dropout),
-            nn.Linear(hidden_dim, dim),
+            YatDense(hidden_dim, dim),
             nn.Dropout(dropout)
         )            
     def forward(self, x):
@@ -58,10 +58,10 @@ class Attention(nn.Module):
         self.dim = dim
         self.inner_dim = inner_dim
         self.attend = nn.Softmax(dim = -1)
-        self.to_qkv = nn.Linear(self.dim, self.inner_dim * 3, bias = False)
+        self.to_qkv = YatDense(self.dim, self.inner_dim * 3, bias = False)
         init_weights(self.to_qkv)
         self.to_out = nn.Sequential(
-            nn.Linear(self.inner_dim, self.dim),
+            YatDense(self.inner_dim, self.dim),
             nn.Dropout(dropout)
         ) if project_out else nn.Identity()
             
@@ -134,7 +134,7 @@ class ViT(nn.Module):
         if not is_SPT:
             self.to_patch_embedding = nn.Sequential(
                 Rearrange('b c (h p1) (w p2) -> b (h w) (p1 p2 c)', p1 = patch_height, p2 = patch_width),
-                nn.Linear(self.patch_dim, self.dim)
+                YatDense(self.patch_dim, self.dim)
             )
             
         else:
@@ -149,7 +149,7 @@ class ViT(nn.Module):
 
         self.mlp_head = nn.Sequential(
             nn.LayerNorm(self.dim),
-            nn.Linear(self.dim, self.num_classes)
+            YatDense(self.dim, self.num_classes)
         )
         
         self.apply(init_weights)
