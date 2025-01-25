@@ -35,7 +35,6 @@ class YatDense(nn.Module):
         self.out_features = out_features
         self.dtype = dtype
         self.epsilon = epsilon
-        self.bias = None
         # Weight initialization
         if kernel_init is None:
             kernel_init = nn.init.xavier_normal_
