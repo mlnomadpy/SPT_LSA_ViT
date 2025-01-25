@@ -79,7 +79,7 @@ class YatDense(nn.Module):
         kernel_init(self.weight)
 
         # Bias initialization
-        if self.bias:
+        if self.bias is not None:
             if bias_init is None:
                 # Default: uniform initialization
                 fan_in, _ = nn.init._calculate_fan_in_and_fan_out(self.weight)
