@@ -33,10 +33,9 @@ class YatDense(nn.Module):
         # Store attributes
         self.in_features = in_features
         self.out_features = out_features
-        self.use_bias = use_bias
         self.dtype = dtype
         self.epsilon = epsilon
-
+        self.bias = None
         # Weight initialization
         if kernel_init is None:
             kernel_init = nn.init.xavier_normal_
@@ -54,7 +53,7 @@ class YatDense(nn.Module):
         ))
 
         # Bias parameter
-        if use_bias:
+        if bias:
             self.bias = nn.Parameter(torch.empty(
                 (out_features,),
                 dtype=dtype
@@ -80,7 +79,7 @@ class YatDense(nn.Module):
         kernel_init(self.weight)
 
         # Bias initialization
-        if self.use_bias:
+        if self.bias:
             if bias_init is None:
                 # Default: uniform initialization
                 fan_in, _ = nn.init._calculate_fan_in_and_fan_out(self.weight)
